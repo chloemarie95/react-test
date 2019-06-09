@@ -19,19 +19,28 @@ class App extends React.Component {
 
         // this is only time we do direct assignment 
         // to this.state - setState any other time
-        this.state = { lat: null };
+        this.state = { lat: null, errorMessage: '' };
 
         window.navigator.geolocation.getCurrentPosition(
             position => {
                 this.setState({ lat: position.coords.latitude });
             },
-            (err) => console.log(err)
+            (err) => {
+                this.setState({ errorMessage: err.message });
+            }
         );
     }
 
     render() {
-        return <div>Latitude: {this.state.lat}</div>;
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>;
+        }
+        if (!this.state.errorMessage && this.state.lat) {
+            return <div>Latitude: {this.state.lat}</div>;
+        }
+        return <div>Loading!</div>;
     }
+
 }
 
 
