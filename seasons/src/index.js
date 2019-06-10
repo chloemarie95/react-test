@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 // Example of functional component - Class better to use
 
@@ -14,20 +15,16 @@ import ReactDOM from 'react-dom';
 // Improved class based component 
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
 
         // this is only time we do direct assignment 
         // to this.state - setState any other time
-        this.state = { lat: null, errorMessage: '' };
 
+    state = { lat: null, errorMessage: ''};
+
+    componentDidMount() {
         window.navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({ lat: position.coords.latitude });
-            },
-            (err) => {
-                this.setState({ errorMessage: err.message });
-            }
+            position => this.setState({ lat: position.coords.latitude }),
+            (err) => this.setState({ errorMessage: err.message })
         );
     }
 
@@ -36,11 +33,10 @@ class App extends React.Component {
             return <div>Error: {this.state.errorMessage}</div>;
         }
         if (!this.state.errorMessage && this.state.lat) {
-            return <div>Latitude: {this.state.lat}</div>;
+            return <SeasonDisplay lat={this.state.lat} />
         }
         return <div>Loading!</div>;
     }
-
 }
 
 
